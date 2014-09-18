@@ -1,7 +1,6 @@
 package com.twitter.university.yamba;
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -10,91 +9,58 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
-import com.marakana.android.yamba.clientlib.YambaClient;
-import com.marakana.android.yamba.clientlib.YambaClientException;
 
 
 public class TweetActivity extends Activity
-        implements View.OnClickListener {
+    implements View.OnClickListener {
 
-    private static final String TAG = "TweetActivity";
+  private static final String TAG = "TweetActivity";
 
-    EditText mEditTweet;
-    Toast mToast;
+  EditText mEditTweet;
 
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tweet);
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_tweet);
 
-        mToast = Toast.makeText(this, null, Toast.LENGTH_LONG);
-        mEditTweet = (EditText) findViewById(R.id.edit_tweet);
-        Button buttonTweet = (Button) findViewById(R.id.button_tweet);
-        buttonTweet.setOnClickListener(this);
-    }
+    mEditTweet = (EditText) findViewById(R.id.edit_tweet);
+    Button buttonTweet = (Button) findViewById(R.id.button_tweet);
+    buttonTweet.setOnClickListener(this);
+  }
 
-    @Override
-    public void onClick(View view) {
-        int id = view.getId();
-        switch (id) {
-            case R.id.button_tweet:
-                // Tweet button clicked
-                if (BuildConfig.DEBUG) Log.d(TAG, "Tweet button clicked");
-                String msg = mEditTweet.getText().toString();
-                if (BuildConfig.DEBUG) Log.d(TAG, "User entered: " + msg);
-                mEditTweet.setText("");
-                if (!TextUtils.isEmpty(msg)) {
-                    new PostToTwitter().execute(msg);
-                }
-                break;
-            default:
-                // Unknown button clicked?!?
+  @Override
+  public void onClick(View view) {
+    int id = view.getId();
+    switch (id) {
+      case R.id.button_tweet:
+        // Tweet button clicked
+        String msg = mEditTweet.getText().toString();
+        if (BuildConfig.DEBUG) Log.d(TAG, "User entered: " + msg);
+        mEditTweet.setText("");
+        if (!TextUtils.isEmpty(msg)) {
+          TweetService.startActionPostTweet(this, msg);
         }
+        break;
+      default:
+        Log.w(TAG, "Unknown view clicked");
     }
+  }
 
-    class PostToTwitter extends AsyncTask<String, Void, Integer> {
-        @Override
-        protected Integer doInBackground(String... params) {
-            String msg;
-            int result = R.string.tweet_post_fail;
-            if (params.length >= 1) {
-                msg = params[0];
-                if (BuildConfig.DEBUG) Log.d(TAG, "Posting tweet: " + msg);
-                try {
-                    YambaClient yambaClient = new YambaClient("student", "password");
-                    yambaClient.postStatus(msg);
-                    result = R.string.tweet_post_success;
-                } catch (YambaClientException e) {
-                    Log.w(TAG, "Failed to post tweet", e);
-                }
-            }
-            return result;
-        }
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    // Inflate the menu; this adds items to the action bar if it is present.
+    getMenuInflater().inflate(R.menu.tweet, menu);
+    return true;
+  }
 
-        @Override
-        protected void onPostExecute(Integer result) {
-            mToast.setText(result);
-            mToast.show();
-        }
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    // Handle action bar item clicks here. The action bar will
+    // automatically handle clicks on the Home/Up button, so long
+    // as you specify a parent activity in AndroidManifest.xml.
+    int id = item.getItemId();
+    if (id == R.id.action_settings) {
+      return true;
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.tweet, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+    return super.onOptionsItemSelected(item);
+  }
 }
