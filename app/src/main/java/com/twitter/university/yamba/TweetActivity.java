@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.marakana.android.yamba.clientlib.YambaClient;
+import com.marakana.android.yamba.clientlib.YambaClientException;
+
 
 public class TweetActivity extends Activity
         implements View.OnClickListener {
@@ -57,13 +60,13 @@ public class TweetActivity extends Activity
             int result = R.string.tweet_post_fail;
             if (params.length >= 1) {
                 msg = params[0];
-                // Emulate posting over the network
                 if (BuildConfig.DEBUG) Log.d(TAG, "Posting tweet: " + msg);
                 try {
-                    Thread.sleep(6000);
+                    YambaClient yambaClient = new YambaClient("student", "password");
+                    yambaClient.postStatus(msg);
                     result = R.string.tweet_post_success;
-                } catch (InterruptedException e) {
-                    Log.d(TAG, "We got interrupted", e);
+                } catch (YambaClientException e) {
+                    Log.w(TAG, "Failed to post tweet", e);
                 }
             }
             return result;
