@@ -27,7 +27,7 @@
             android:id="@+id/edit_tweet"
             android:layout_weight="1"
             android:hint="@string/edit_tweet_hint"
-            />
+            android:maxLength="140"/>
 
     <Button
             android:layout_width="wrap_content"

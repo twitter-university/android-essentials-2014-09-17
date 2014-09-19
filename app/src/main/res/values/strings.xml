@@ -9,5 +9,6 @@
     <string name="edit_tweet_hint">What\'s happening?</string>
     <string name="tweet_post_success">Successfully posted tweet</string>
     <string name="tweet_post_fail">Failed to post tweet</string>
+    <string name="title_activity_timeline">Timeline</string>
 
 </resources>
