@@ -13,10 +13,22 @@ import android.os.Build;
 
 public class TimelineActivity extends YambaActivity {
 
+  boolean mDetailsFragmentPresent;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_timeline);
+    mDetailsFragmentPresent
+        = (null != findViewById(R.id.detail_fragment_container));
+    if (mDetailsFragmentPresent
+        && null == getFragmentManager().findFragmentById(R.id.tweet_detail_fragment)) {
+      // Create a placeholder TweetDetailFragment if one not present
+      Fragment f = TweetDetailFragment.newInstance(null);
+      getFragmentManager().beginTransaction()
+          .add(R.id.detail_fragment_container, f)
+          .commit();
+    }
   }
 
 }
