@@ -10,18 +10,22 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:id="@+id/tweet_detail_user"
+      android:textAppearance="?android:attr/textAppearanceLarge"
       tools:text="User" />
 
   <TextView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:id="@+id/tweet_detail_date"
+      android:textAppearance="?android:attr/textAppearanceSmall"
       tools:text="Date" />
 
   <TextView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:id="@+id/tweet_detail_msg"
+      android:textAppearance="?android:attr/textAppearanceMedium"
+      android:autoLink="all"
       tools:text="Message" />
 
 </LinearLayout>

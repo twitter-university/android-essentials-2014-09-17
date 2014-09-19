@@ -3,11 +3,13 @@ package com.twitter.university.yamba;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
@@ -62,6 +64,23 @@ public class TimelineFragment extends ListFragment
     setListAdapter(mAdapter);
   }
 
+  @Override
+  public void onListItemClick(ListView l, View v, int position, long id) {
+    super.onListItemClick(l, v, position, id);
+    Cursor cursor = mAdapter.getCursor();
+    if (cursor != null && cursor.moveToPosition(position)) {
+      String user = cursor.getString(cursor.getColumnIndex(YambaContract.Timeline.Columns.HANDLE));
+      String msg = cursor.getString(cursor.getColumnIndex(YambaContract.Timeline.Columns.TWEET));
+      long timestamp = cursor.getLong(cursor.getColumnIndex(YambaContract.Timeline.Columns.TIMESTAMP));
+      String date = DateUtils.getRelativeTimeSpanString(timestamp).toString();
+
+      Intent intent = new Intent(getActivity(), TweetDetailActivity.class);
+      intent.putExtra(TweetDetailFragment.ARG_USER, user);
+      intent.putExtra(TweetDetailFragment.ARG_MSG, msg);
+      intent.putExtra(TweetDetailFragment.ARG_DATE, date);
+      startActivity(intent);
+    }
+  }
   @Override
   public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
     return new CursorLoader(

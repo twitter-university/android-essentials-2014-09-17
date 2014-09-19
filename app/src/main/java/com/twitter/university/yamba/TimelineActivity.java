@@ -1,33 +1,40 @@
 package com.twitter.university.yamba;
 
-import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
 
 public class TimelineActivity extends YambaActivity {
 
-  boolean mDetailsFragmentPresent;
+  boolean mDetailsFragmentContainerPresent;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_timeline);
-    mDetailsFragmentPresent
-        = (null != findViewById(R.id.detail_fragment_container));
-    if (mDetailsFragmentPresent
-        && null == getFragmentManager().findFragmentById(R.id.tweet_detail_fragment)) {
+    mDetailsFragmentContainerPresent = (null != findViewById(R.id.detail_fragment_container));
+    if (mDetailsFragmentContainerPresent && null == savedInstanceState) {
       // Create a placeholder TweetDetailFragment if one not present
       Fragment f = TweetDetailFragment.newInstance(null);
       getFragmentManager().beginTransaction()
           .add(R.id.detail_fragment_container, f)
           .commit();
+    }
+  }
+
+  private void showDetails(Bundle args) {
+    getFragmentManager().beginTransaction()
+        .replace(R.id.detail_fragment_container, TweetDetailFragment.newInstance(args))
+        .commit();
+  }
+
+  @Override
+  public void startActivityFromFragment(Fragment fragment, Intent intent, int requestCode) {
+    if (mDetailsFragmentContainerPresent) {
+      Bundle args = intent.getExtras();
+      showDetails(args);
+    } else {
+      startActivity(intent);
     }
   }
 
