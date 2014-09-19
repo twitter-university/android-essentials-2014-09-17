@@ -10,5 +10,7 @@
     <string name="tweet_post_success">Successfully posted tweet</string>
     <string name="tweet_post_fail">Failed to post tweet</string>
     <string name="title_activity_timeline">Timeline</string>
+  <string name="action_tweet_text">Tweet</string>
+  <string name="action_timeline_text">Timeline</string>
 
 </resources>
